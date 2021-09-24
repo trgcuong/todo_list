@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_list/generated/l10n.dart';
 
 import 'home_bloc.dart';
 
@@ -37,36 +37,31 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('To-do List'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('To-do List'),
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items:  <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.list_alt),
+            label: S.of(context).incomplete,
           ),
-          body: Center(
-            child: _widgetOptions.elementAt(_selectedIndex),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.fact_check_outlined),
+            label: S.of(context).complete,
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list_alt),
-                label: 'Incomplete',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.fact_check_outlined),
-                label: 'Complete',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.view_list_rounded),
-                label: 'All',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            // selectedItemColor: Colors.amber[800],
-            onTap: _onItemTapped,
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.view_list_rounded),
+            label: S.of(context).all,
           ),
-        );
-      },
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
