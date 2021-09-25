@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/base/base_bloc.dart';
+import 'package:todo_list/features/home/todo_list/todo_list_widget.dart';
 import 'package:todo_list/generated/l10n.dart';
 
 import 'home_bloc.dart';
@@ -12,23 +13,7 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-  ];
-
+ final PageController _pageController = PageController(initialPage: 0);
   void _onItemTapped(BuildContext context, int index) {
     context.readBloc<HomeBloc>().addEvent(ChangCurrentPageHomeEvent(index));
   }
@@ -42,14 +27,23 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget build(BuildContext context) {
     return BaseBlocProvider(
       create: (context) => HomeBloc(),
-      child: BaseBlocBuilder<HomeBloc, HomeState>(
+      child: BaseBlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state){
+          _pageController.jumpToPage(state.currentPage);
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: const Text('To-do List'),
             ),
-            body: Center(
-            child: _widgetOptions.elementAt(state.currentPage)),
+            body: PageView(
+              controller: _pageController ,
+              children: const [
+                TodoListWidget(),
+                Text('1'),
+                Text('2'),
+              ],
+            ),
             bottomNavigationBar: _buildBottomNavigationBar(context, state),
           );
         },
