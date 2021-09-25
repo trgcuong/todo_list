@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
   BaseBloc(State initialState) : super(initialState);
+  void addEvent(Event event){
+    add(event);
+  }
 }
 
 class BaseBlocConsumer<B extends BlocBase<S>, S> extends BlocConsumer<B, S> {
@@ -34,4 +37,25 @@ class BaseBlocBuilder<B extends BlocBase<S>, S> extends BlocBuilder<B, S> {
           buildWhen: buildWhen,
           builder: builder,
         );
+}
+
+class BaseBlocProvider<T extends BlocBase<Object?>> extends BlocProvider<T> {
+  BaseBlocProvider({
+    Key? key,
+    required T Function(BuildContext context) create,
+    Widget? child,
+    bool? lazy,
+  }) : super(key: key, create: create, child: child, lazy: lazy);
+
+  BaseBlocProvider.value({
+    Key? key,
+    required T value,
+    Widget? child,
+  }) : super.value(key: key, child: child, value: value);
+}
+
+extension BlocExtension on BuildContext{
+  T readBloc<T extends BaseBloc>(){
+   return read<T>();
+  }
 }

@@ -6,9 +6,9 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
-    on<HomeEvent>((event, emit) {
-      // TODO: implement event handler
+  HomeBloc() : super(const HomeState()) {
+    on<ChangCurrentPageHomeEvent>((event, emit) {
+      emit(state.copyWith(currentPage: event.page));
     });
   }
 }
