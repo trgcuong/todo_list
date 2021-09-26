@@ -4,6 +4,8 @@ import 'package:todo_list/features/home/home_widget.dart';
 import 'package:todo_list/generated/l10n.dart';
 import 'package:todo_list/resources/colors.dart';
 
+import 'app_theme.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,9 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'To-do List',
-      theme: ThemeData(
-        primarySwatch: AppColors.blue,
-      ),
+      theme: AppTheme.light(),
       home: const HomeWidget(),
       localizationsDelegates: const [
         S.delegate,

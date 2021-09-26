@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/base/base_bloc.dart';
+import 'package:todo_list/features/home/home_bloc.dart';
+import 'package:todo_list/generated/l10n.dart';
 
 import 'todo_list_bloc.dart';
 
@@ -11,17 +13,42 @@ class TodoListWidget extends StatefulWidget {
 }
 
 class _TodoListWidgetState extends State<TodoListWidget> {
+  final bloc = TodoListBloc();
+
+  @override
+  void didChangeDependencies() {
+    bloc.addEvent(InitialEvent());
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseBlocProvider(
-      create: (context) => TodoListBloc(),
+      create: (context) => bloc,
       child: BaseBlocBuilder<TodoListBloc, TodoListState>(
         builder: (context, state) {
           return Container(
-            child: ListView.builder(
-              itemBuilder: (context, index) =>
-                  _itemBuilder(context, index, state),
-              itemCount: 10,//todo
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.add_circle_outline),
+                      hintText: S.of(context).addANewTask,
+                    ),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (text) {
+                      bloc.addEvent(AddTaskToDoListEvent(text));
+                    },
+                  ),
+                ),
+                const Divider(),
+                if (state.tasks.isEmpty)
+                  _buildEmptyLayout(context)
+                else
+                  _buildListTask(state),
+              ],
             ),
           );
         },
@@ -29,13 +56,30 @@ class _TodoListWidgetState extends State<TodoListWidget> {
     );
   }
 
+  Expanded _buildListTask(TodoListState state) {
+    return Expanded(
+      child: ListView.builder(
+          itemBuilder: (context, index) => _itemBuilder(context, index, state),
+          itemCount: state.tasks.length),
+    );
+  }
+
+  Expanded _buildEmptyLayout(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: Text(S.of(context).youHaveNoTaskPleaseAddANewOne),
+      ),
+    );
+  }
+
   Widget _itemBuilder(BuildContext context, int index, TodoListState state) {
+    final task = state.tasks[index];
     return ListTile(
       leading: Checkbox(
         onChanged: (bool? value) {},
-        value: true,
+        value: task.isComplete,
       ),
-      title: Text('Do something'),
+      title: Text(task.content),
     );
   }
 }

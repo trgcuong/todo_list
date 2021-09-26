@@ -79,6 +79,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Add a new task`
+  String get addANewTask {
+    return Intl.message(
+      'Add a new task',
+      name: 'addANewTask',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have no tasks. Please add a new one`
+  String get youHaveNoTaskPleaseAddANewOne {
+    return Intl.message(
+      'You have no tasks. Please add a new one',
+      name: 'youHaveNoTaskPleaseAddANewOne',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

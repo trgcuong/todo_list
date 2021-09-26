@@ -1,5 +1,7 @@
 {
   "incomplete": "Incomplete",
   "complete": "Complete",
-  "all": "All"
+  "all": "All",
+  "addANewTask": "Add a new task",
+  "youHaveNoTaskPleaseAddANewOne": "You have no tasks. Please add a new one"
 }

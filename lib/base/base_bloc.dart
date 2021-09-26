@@ -8,6 +8,8 @@ abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
   }
 }
 
+
+
 class BaseBlocConsumer<B extends BlocBase<S>, S> extends BlocConsumer<B, S> {
   const BaseBlocConsumer({
     Key? key,
