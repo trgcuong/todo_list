@@ -39,10 +39,9 @@ class _HomeWidgetState extends State<HomeWidget> {
             body: PageView(
               controller: _pageController ,
               children: const [
-                TodoListWidget(),
-                //Text('1'),
-                Text('1'),
-                Text('2'),
+                TodoListWidget(type: TodoListType.incomplete,),
+                TodoListWidget(type: TodoListType.complete,),
+                TodoListWidget(type: TodoListType.all,),
               ],
             ),
             bottomNavigationBar: _buildBottomNavigationBar(context, state),

@@ -6,13 +6,17 @@ import 'package:todo_list/app/di.dart';
 import 'package:todo_list/base/base_bloc.dart';
 import 'package:todo_list/data/model/task_model.dart';
 import 'package:todo_list/data/repository/task_repository.dart';
+import 'package:todo_list/features/home/todo_list/todo_list_widget.dart';
 
 part 'todo_list_event.dart';
 
 part 'todo_list_state.dart';
 
 class TodoListBloc extends BaseBloc<TodoListEvent, TodoListState> {
-  TodoListBloc() : super(TodoListState(tasks: List<TaskModel>.empty(), isLoading: true)) {
+  late TodoListType type;
+
+  TodoListBloc()
+      : super(TodoListState(tasks: List<TaskModel>.empty(), isLoading: true)) {
     on<InitialTodoListEvent>((event, emit) async {
       await _initialData(emit);
     });
@@ -36,8 +40,15 @@ class TodoListBloc extends BaseBloc<TodoListEvent, TodoListState> {
   }
 
   Future<void> _initialData(Emitter<TodoListState> emit) async {
-     emit(state.copyWith(isLoading: true));
-    final tasks = await getIt.get<TaskRepository>().getAllTasks();
+    emit(state.copyWith(isLoading: true));
+    List<TaskModel> tasks;
+    if (type == TodoListType.incomplete) {
+      tasks = await getIt.get<TaskRepository>().getIncompleteTasks();
+    } else if (type == TodoListType.complete) {
+      tasks = await getIt.get<TaskRepository>().getCompleteTasks();
+    } else {
+      tasks = await getIt.get<TaskRepository>().getAllTasks();
+    }
     emit(state.copyWith(tasks: List<TaskModel>.from(tasks)));
   }
 }

@@ -5,8 +5,12 @@ import 'package:todo_list/utils/common_widgets.dart';
 
 import 'todo_list_bloc.dart';
 
+enum TodoListType { incomplete, complete, all }
+
 class TodoListWidget extends StatefulWidget {
-  const TodoListWidget({Key? key}) : super(key: key);
+  final TodoListType type;
+
+  const TodoListWidget({Key? key, required this.type}) : super(key: key);
 
   @override
   _TodoListWidgetState createState() => _TodoListWidgetState();
@@ -19,6 +23,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
 
   @override
   void didChangeDependencies() {
+    bloc.type = widget.type;
     bloc.add(InitialTodoListEvent());
     super.didChangeDependencies();
   }
@@ -43,7 +48,6 @@ class _TodoListWidgetState extends State<TodoListWidget> {
                   onSubmitted: (text) {
                     bloc.add(AddTaskTodoListEvent(text));
                     _textController.clear();
-
                   },
                 ),
               ),

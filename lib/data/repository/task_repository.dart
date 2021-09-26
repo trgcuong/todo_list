@@ -53,7 +53,7 @@ class TaskDatabase extends BaseLocalData implements TaskRepository {
     return isar.taskModelDbs
         .where(sort: Sort.Desc)
         .filter()
-        .isCompleteEqualTo(false)
+        .isCompleteEqualTo(true)
         .findAll()
         .then((tasks) => tasks
             .map((e) => TaskModel(
