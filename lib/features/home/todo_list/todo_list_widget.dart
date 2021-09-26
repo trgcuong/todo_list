@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/base/base_bloc.dart';
-import 'package:todo_list/features/home/home_bloc.dart';
 import 'package:todo_list/generated/l10n.dart';
 
 import 'todo_list_bloc.dart';
@@ -27,29 +26,27 @@ class _TodoListWidgetState extends State<TodoListWidget> {
       create: (context) => bloc,
       child: BaseBlocBuilder<TodoListBloc, TodoListState>(
         builder: (context, state) {
-          return Container(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.add_circle_outline),
-                      hintText: S.of(context).addANewTask,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (text) {
-                      bloc.addEvent(AddTaskToDoListEvent(text));
-                    },
+          return Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.add_circle_outline),
+                    hintText: S.of(context).addANewTask,
                   ),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (text) {
+                    bloc.addEvent(AddTaskToDoListEvent(text));
+                  },
                 ),
-                const Divider(),
-                if (state.tasks.isEmpty)
-                  _buildEmptyLayout(context)
-                else
-                  _buildListTask(state),
-              ],
-            ),
+              ),
+              const Divider(),
+              if (state.tasks.isEmpty)
+                _buildEmptyLayout(context)
+              else
+                _buildListTask(state),
+            ],
           );
         },
       ),
