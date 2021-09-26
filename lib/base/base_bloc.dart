@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
   BaseBloc(State initialState) : super(initialState);
-  void addEvent(Event event){
-    add(event);
+
+  @override
+  void add(Event event) {
+    super.add(event);
   }
 }
-
-
 
 class BaseBlocConsumer<B extends BlocBase<S>, S> extends BlocConsumer<B, S> {
   const BaseBlocConsumer({
@@ -56,8 +56,8 @@ class BaseBlocProvider<T extends BlocBase<Object?>> extends BlocProvider<T> {
   }) : super.value(key: key, child: child, value: value);
 }
 
-extension BlocExtension on BuildContext{
-  T readBloc<T extends BaseBloc>(){
-   return read<T>();
+extension BlocExtension on BuildContext {
+  T readBloc<T extends BaseBloc>() {
+    return read<T>();
   }
 }
