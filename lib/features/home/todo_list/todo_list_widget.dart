@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/base/base_bloc.dart';
 import 'package:todo_list/generated/l10n.dart';
+import 'package:todo_list/utils/common_widgets.dart';
 
 import 'todo_list_bloc.dart';
 
@@ -14,9 +15,11 @@ class TodoListWidget extends StatefulWidget {
 class _TodoListWidgetState extends State<TodoListWidget> {
   final bloc = TodoListBloc();
 
+  final TextEditingController _textController = TextEditingController();
+
   @override
   void didChangeDependencies() {
-    bloc.addEvent(InitialEvent());
+    bloc.add(InitialTodoListEvent());
     super.didChangeDependencies();
   }
 
@@ -31,18 +34,23 @@ class _TodoListWidgetState extends State<TodoListWidget> {
               Container(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
+                  controller: _textController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.add_circle_outline),
                     hintText: S.of(context).addANewTask,
                   ),
                   textInputAction: TextInputAction.done,
                   onSubmitted: (text) {
-                    bloc.addEvent(AddTaskToDoListEvent(text));
+                    bloc.add(AddTaskTodoListEvent(text));
+                    _textController.clear();
+
                   },
                 ),
               ),
               const Divider(),
-              if (state.tasks.isEmpty)
+              if (state.isLoading)
+                const Expanded(child: Center(child: LoadingView()))
+              else if (state.tasks.isEmpty)
                 _buildEmptyLayout(context)
               else
                 _buildListTask(state),
@@ -73,7 +81,9 @@ class _TodoListWidgetState extends State<TodoListWidget> {
     final task = state.tasks[index];
     return ListTile(
       leading: Checkbox(
-        onChanged: (bool? value) {},
+        onChanged: (bool? checked) {
+          bloc.add(SetCompleteTaskListEvent(checked ?? false, index));
+        },
         value: task.isComplete,
       ),
       title: Text(task.content),

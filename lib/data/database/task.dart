@@ -3,7 +3,6 @@ import 'package:todo_list/data/model/task_model.dart';
 
 @Collection()
 class TaskModelDb {
-  @Id()
   int? id;
 
   String content = "";
@@ -14,6 +13,7 @@ class TaskModelDb {
 
   factory TaskModelDb.from(TaskModel model) {
     return TaskModelDb.create(
+      id: model.id,
       content: model.content,
       isComplete: model.isComplete,
     );

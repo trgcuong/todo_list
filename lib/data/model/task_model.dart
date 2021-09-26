@@ -1,16 +1,17 @@
 class TaskModel {
-  int id;
+  int? id;
 
   String content;
 
   bool isComplete;
   TaskModel({
-    this.id = 0,
+    this.id,
     required this.content,
     this.isComplete = false,
-  }) {
-    if (id <= 0 ) {
-      id = DateTime.now().microsecondsSinceEpoch;
-    }
+  });
+
+  @override
+  String toString() {
+    return 'TaskModel{id: $id, content: $content, isComplete: $isComplete}';
   }
 }
