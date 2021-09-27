@@ -16,7 +16,7 @@ class TodoListWidget extends StatefulWidget {
   _TodoListWidgetState createState() => _TodoListWidgetState();
 }
 
-class _TodoListWidgetState extends State<TodoListWidget> {
+class _TodoListWidgetState extends State<TodoListWidget> with AutomaticKeepAliveClientMixin {
   final bloc = TodoListBloc();
 
   final TextEditingController _textController = TextEditingController();
@@ -24,7 +24,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
   @override
   void didChangeDependencies() {
     bloc.type = widget.type;
-    bloc.add(InitialTodoListEvent());
+    bloc.add(InitialEvent());
     super.didChangeDependencies();
   }
 
@@ -36,6 +36,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
         builder: (context, state) {
           return Column(
             children: [
+              if(widget.type == TodoListType.incomplete)
               Container(
                 padding: const EdgeInsets.all(16),
                 child: TextField(
@@ -51,6 +52,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
                   },
                 ),
               ),
+              if(widget.type == TodoListType.incomplete)
               const Divider(),
               if (state.isLoading)
                 const Expanded(child: Center(child: LoadingView()))
@@ -93,4 +95,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
       title: Text(task.content),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

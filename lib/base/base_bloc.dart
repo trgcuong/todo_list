@@ -1,13 +1,33 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
+abstract class BaseBloc<State> extends Bloc<BaseBlocEvent, State> {
   BaseBloc(State initialState) : super(initialState);
 
   @override
-  void add(Event event) {
+  void add(BaseBlocEvent event) {
     super.add(event);
   }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    add(ErrorEvent(error));
+    super.onError(error, stackTrace);
+  }
+}
+
+abstract class BaseEmitter<State> extends Emitter<State> {}
+
+abstract class BaseBlocEvent {}
+
+class InitialEvent extends BaseBlocEvent {}
+
+class ErrorEvent extends BaseBlocEvent {
+  final dynamic error;
+
+  ErrorEvent(this.error);
 }
 
 class BaseBlocConsumer<B extends BlocBase<S>, S> extends BlocConsumer<B, S> {

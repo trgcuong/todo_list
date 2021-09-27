@@ -1,7 +1,7 @@
 part of 'todo_list_bloc.dart';
 
 @immutable
-abstract class TodoListEvent {}
+abstract class TodoListEvent extends BaseBlocEvent {}
 
 @immutable
 class AddTaskTodoListEvent extends TodoListEvent{
@@ -22,5 +22,3 @@ class SetCompleteTaskListEvent extends TodoListEvent{
     return 'SetCompleteTaskListEvent{isChecked: $isChecked, index: $index}';
   }
 }
-@immutable
-class InitialTodoListEvent extends TodoListEvent{}
