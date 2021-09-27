@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:todo_list/base/base_bloc.dart';
 import 'package:todo_list/features/home/todo_list/todo_list_widget.dart';
 import 'package:todo_list/generated/l10n.dart';
@@ -34,7 +35,10 @@ class _HomeWidgetState extends State<HomeWidget> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('To-do List'),
+              toolbarHeight: 0,
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
             ),
             body: PageView(
               controller: _pageController ,
