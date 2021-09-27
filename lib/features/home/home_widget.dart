@@ -15,9 +15,6 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
  final PageController _pageController = PageController(initialPage: 0);
-  void _onItemTapped(BuildContext context, int index) {
-    context.readBloc<HomeBloc>().add(ChangCurrentPageHomeEvent(index));
-  }
 
   @override
   void initState() {
@@ -75,4 +72,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       onTap:(index) => _onItemTapped(context, index),
     );
   }
+
+ void _onItemTapped(BuildContext context, int index) {
+   context.readBloc<HomeBloc>().add(ChangCurrentPageHomeEvent(index));
+ }
 }

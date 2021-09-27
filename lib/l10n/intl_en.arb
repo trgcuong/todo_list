@@ -3,5 +3,7 @@
   "complete": "Complete",
   "all": "All",
   "addANewTask": "Add a new task",
-  "youHaveNoTaskPleaseAddANewOne": "You have no tasks. Please add a new one"
+  "youHaveNoTaskPleaseAddANewOne": "You have no tasks. Please add a new one",
+  "close": "Close",
+  "error": "Error"
 }

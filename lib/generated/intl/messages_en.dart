@@ -23,7 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "addANewTask": MessageLookupByLibrary.simpleMessage("Add a new task"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "complete": MessageLookupByLibrary.simpleMessage("Complete"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
         "incomplete": MessageLookupByLibrary.simpleMessage("Incomplete"),
         "youHaveNoTaskPleaseAddANewOne": MessageLookupByLibrary.simpleMessage(
             "You have no tasks. Please add a new one")
