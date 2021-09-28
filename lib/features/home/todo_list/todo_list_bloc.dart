@@ -31,13 +31,16 @@ class TodoListBloc extends BaseBloc<TodoListState> {
     });
     on<SetCompleteTaskListEvent>((event, emit) async {
       final newTasks = List<TaskModel>.from(state.tasks);
-      final task = newTasks[event.index];
-      task.isComplete = event.isChecked;
-      AppLog.d(task);
+      final newTask =
+          newTasks[event.index].copyWith(isComplete: event.isChecked);
+      newTasks[event.index] = newTask;
       emit(state.copyWith(tasks: newTasks));
-      await getIt.get<TaskRepository>().updateTask(task);
+      await getIt.get<TaskRepository>().updateTask(newTask);
+      if (type != TodoListType.all) {
+        await Future.delayed(const Duration(seconds: 1));
+        await _initialData(emit); // reload data
+      }
     });
-
   }
 
   Future<void> _initialData(Emitter<TodoListState> emit) async {

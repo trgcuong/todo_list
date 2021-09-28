@@ -15,7 +15,7 @@ class TodoListState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [isLoading, tasks.hashCode, isSubmitting];
+  List<Object?> get props => [isLoading, tasks, isSubmitting];
 
   TodoListState copyWith({
     List<TaskModel>? tasks,

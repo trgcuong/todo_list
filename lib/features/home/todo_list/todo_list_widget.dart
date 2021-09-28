@@ -68,10 +68,9 @@ class _TodoListWidgetState extends State<TodoListWidget>
                 ),
               if(widget.type == TodoListType.incomplete)
                 const Divider(),
-              if (state.isLoading)
+              if (state.isLoading && state.tasks.isEmpty)
                 const Expanded(child: Center(child: LoadingView()))
-              else
-                if (state.tasks.isEmpty)
+              else if (state.tasks.isEmpty)
                   _buildEmptyLayout(context)
                 else
                   _buildListTask(state),
