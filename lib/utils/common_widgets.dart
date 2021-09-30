@@ -4,11 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list/resources/colors.dart';
 class LoadingView extends StatelessWidget {
-  const LoadingView({Key? key}) : super(key: key);
+  final bool? isIOS;
+  final bool? isMacOS;
+
+  const LoadingView({Key? key, this.isIOS, this.isMacOS}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS || Platform.isMacOS) {
+    if ((isIOS ?? Platform.isIOS) || ( isMacOS ?? Platform.isMacOS)) {
       return const CupertinoActivityIndicator();
     }
     return Container(
