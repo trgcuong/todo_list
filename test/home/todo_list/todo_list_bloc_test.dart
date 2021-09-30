@@ -30,8 +30,8 @@ void main() {
       ],
       growable: true,
     );
-    newTask = TaskModel(content: 'task 3');
-    initialState = TodoListState(tasks: [], isLoading: true);
+    newTask = const TaskModel(content: 'task 3');
+    initialState = const TodoListState(tasks: [], isLoading: true);
      firstLoadedState = TodoListState(
       isLoading: false,
       tasks: mockedTasks.reversed.toList(),
@@ -112,7 +112,7 @@ void main() {
   );
 
   makeBlocTest<TodoListBloc, TodoListState>(
-    'add a new task failed',
+    'add a new task unsuccessfully',
     setUp: () {
       getIt.unregister<TaskRepository>();
       getIt.registerSingleton<TaskRepository>(mockTaskRepository);
@@ -166,4 +166,5 @@ void main() {
       ]),
     ],
   );
+
 }

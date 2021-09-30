@@ -79,25 +79,25 @@ class FakeTaskRepository implements TaskRepository {
   @override
   Future<List<TaskModel>> getAllTasks() async {
     return [
-      TaskModel(content: 'task 1', isComplete: true),
-      TaskModel(content: 'task 2', isComplete: false),
-      TaskModel(content: 'task 3', isComplete: true)
+      const TaskModel(content: 'task 1', isComplete: true),
+      const TaskModel(content: 'task 2', isComplete: false),
+      const TaskModel(content: 'task 3', isComplete: true)
     ];
   }
 
   @override
   Future<List<TaskModel>> getCompleteTasks() async {
     return [
-      TaskModel(content: 'task 1', isComplete: true),
-      TaskModel(content: 'task 2', isComplete: true)
+      const TaskModel(content: 'task 1', isComplete: true),
+      const TaskModel(content: 'task 2', isComplete: true)
     ];
   }
 
   @override
   Future<List<TaskModel>> getIncompleteTasks() async {
     return [
-      TaskModel(content: 'task 1'),
-      TaskModel(content: 'task 2'),
+      const TaskModel(content: 'task 1'),
+      const TaskModel(content: 'task 2'),
     ];
   }
 
