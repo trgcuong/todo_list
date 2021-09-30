@@ -13,13 +13,14 @@ part 'todo_list_event.dart';
 part 'todo_list_state.dart';
 
 class TodoListBloc extends BaseBloc<TodoListState> {
-  late TodoListType type;
+   TodoListType type = TodoListType.incomplete;
 
   TodoListBloc()
       : super(TodoListState(tasks: List<TaskModel>.empty(), isLoading: true)) {
     on<InitialEvent>((event, emit) async {
       await _initialData(emit);
     });
+
     on<AddTaskTodoListEvent>((event, emit) async {
       emit(state.copyWith(isSubmitting: true));
       final task = TaskModel(content: event.content);
@@ -29,6 +30,7 @@ class TodoListBloc extends BaseBloc<TodoListState> {
       emit(state.copyWith(tasks: newTasks));
       await _initialData(emit); // reload data
     });
+
     on<SetCompleteTaskListEvent>((event, emit) async {
       final newTasks = List<TaskModel>.from(state.tasks);
       final newTask =
@@ -40,6 +42,9 @@ class TodoListBloc extends BaseBloc<TodoListState> {
         await Future.delayed(const Duration(seconds: 1));
         await _initialData(emit); // reload data
       }
+    });
+    on<ErrorEvent>((event, emit) {
+      emit(state.copyWith(error: event.error));
     });
   }
 

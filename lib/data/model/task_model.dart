@@ -23,9 +23,8 @@ class TaskModel extends Equatable {
 
 
   @override
-  String toString() {
-    return 'TaskModel{id: $id, content: $content, isComplete: $isComplete}';
-  }
+ // String toString() => 'TaskModel{content: $content}';
+  String toString() => 'TaskModel{isComplete: $isComplete}';
 
   TaskModel copyWith({
     int? id,

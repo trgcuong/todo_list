@@ -8,7 +8,11 @@ part 'home_state.dart';
 class HomeBloc extends BaseBloc<HomeState> {
   HomeBloc() : super(const HomeState()) {
     on<ChangCurrentPageHomeEvent>((event, emit) {
-      emit(state.copyWith(currentPage: event.page));
+      int page = event.page;
+      if(page <0 || page > 2) {
+        page = 0;
+      }
+      emit(state.copyWith(currentPage: page));
     });
   }
 }

@@ -8,14 +8,16 @@ import 'app_theme.dart';
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final Widget? home;
+
+  const MyApp({Key? key, this.home}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'To-do List',
       theme: AppTheme.light(),
-      home: const HomeWidget(),
+      home: home ?? const HomeWidget(),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

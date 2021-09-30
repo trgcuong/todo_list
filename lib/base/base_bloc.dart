@@ -80,4 +80,7 @@ extension BlocExtension on BuildContext {
   T readBloc<T extends BaseBloc>() {
     return read<T>();
   }
+  T watchBloc<T extends BaseBloc>() {
+    return watch<T>();
+  }
 }

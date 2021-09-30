@@ -76,3 +76,36 @@ class TaskDatabase extends BaseLocalData implements TaskRepository {
         .writeTxn((isar) => isar.taskModelDbs.put(TaskModelDb.from(task)));
   }
 }
+
+class FakeTaskRepository implements TaskRepository {
+  @override
+  Future<List<TaskModel>> getAllTasks() async {
+    return [
+      TaskModel(content: 'task 1', isComplete: true),
+      TaskModel(content: 'task 2', isComplete: false),
+      TaskModel(content: 'task 3', isComplete: true)
+    ];
+  }
+
+  @override
+  Future<List<TaskModel>> getCompleteTasks() async {
+    return [
+      TaskModel(content: 'task 1', isComplete: true),
+      TaskModel(content: 'task 2', isComplete: true)
+    ];
+  }
+
+  @override
+  Future<List<TaskModel>> getIncompleteTasks() async {
+    return [
+      TaskModel(content: 'task 1'),
+      TaskModel(content: 'task 2'),
+    ];
+  }
+
+  @override
+  Future<void> newTask(TaskModel task) async {}
+
+  @override
+  Future<void> updateTask(TaskModel task) async {}
+}

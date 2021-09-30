@@ -30,25 +30,39 @@ class _HomeWidgetState extends State<HomeWidget> {
           _pageController.jumpToPage(state.currentPage);
         },
         builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 0,
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-            ),
-            body: PageView(
-              controller: _pageController ,
-              children: const [
-                TodoListWidget(type: TodoListType.incomplete,),
-                TodoListWidget(type: TodoListType.complete,),
-                TodoListWidget(type: TodoListType.all,),
-              ],
-            ),
-            bottomNavigationBar: _buildBottomNavigationBar(context, state),
-          );
+          return HomePageView(pageController: _pageController);
         },
       ),
+    );
+  }
+
+
+}
+
+class HomePageView extends StatelessWidget {
+  final PageController pageController;
+
+  const HomePageView({Key? key,required this.pageController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watchBloc<HomeBloc>().state;
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      body: PageView(
+        controller: pageController ,
+        children: const [
+          TodoListWidget(type: TodoListType.incomplete,),
+          TodoListWidget(type: TodoListType.complete,),
+          TodoListWidget(type: TodoListType.all,),
+        ],
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(context, state),
     );
   }
 
@@ -73,7 +87,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
- void _onItemTapped(BuildContext context, int index) {
-   context.readBloc<HomeBloc>().add(ChangCurrentPageHomeEvent(index));
- }
+  void _onItemTapped(BuildContext context, int index) {
+    context.readBloc<HomeBloc>().add(ChangCurrentPageHomeEvent(index));
+  }
 }
+
