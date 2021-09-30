@@ -15,9 +15,36 @@ import 'todo_list_bloc_test.mocks.dart';
 @GenerateMocks([TaskRepository])
 void main() {
   late MockTaskRepository mockTaskRepository;
+  late List<TaskModel> mockedTasks;
+  late TaskModel newTask;
+  late TodoListState initialState;
+  late TodoListState firstLoadedState;
+  late TodoListState completeState;
   setUp(() {
     mockTaskRepository = MockTaskRepository();
     getIt.registerSingleton<TaskRepository>(FakeTaskRepository());
+    mockedTasks = List<TaskModel>.from(
+      [
+        const TaskModel(content: 'task 1'),
+        const TaskModel(content: 'task 2'),
+      ],
+      growable: true,
+    );
+    newTask = TaskModel(content: 'task 3');
+    initialState = TodoListState(tasks: [], isLoading: true);
+     firstLoadedState = TodoListState(
+      isLoading: false,
+      tasks: mockedTasks.reversed.toList(),
+    );
+     completeState = TodoListState(
+      isLoading: false,
+      tasks: [
+        newTask,
+        ...mockedTasks.reversed.toList(),
+      ],
+      isSubmitting: false,
+    );
+
   });
   tearDown(() {
     getIt.unregister<TaskRepository>();
@@ -55,113 +82,88 @@ void main() {
     ],
   );
 
-  group('create a new task success', () {
-    final mockedTasks = List<TaskModel>.from(
-      [
-        const TaskModel(content: 'task 1'),
+  makeBlocTest<TodoListBloc, TodoListState>(
+    'add a new task successfully',
+    setUp: () {
+      getIt.unregister<TaskRepository>();
+      getIt.registerSingleton<TaskRepository>(mockTaskRepository);
+    },
+    build: () {
+      when(mockTaskRepository.getIncompleteTasks())
+          .thenAnswer((_) async => mockedTasks);
+      when(mockTaskRepository.newTask(newTask)).thenAnswer((_) async {
+        mockedTasks.add(newTask);
+      });
+      return TodoListBloc();
+    },
+    act: (bloc) {
+      bloc.add(InitialEvent());
+
+      bloc.add(AddTaskTodoListEvent('task 3'));
+    },
+    expect: () => [
+      initialState,
+      firstLoadedState,
+      firstLoadedState.copyWith(isSubmitting: true),
+      completeState.copyWith(isSubmitting: false),
+      completeState.copyWith(isLoading: true),
+      completeState.copyWith(isLoading: false),
+    ],
+  );
+
+  makeBlocTest<TodoListBloc, TodoListState>(
+    'add a new task failed',
+    setUp: () {
+      getIt.unregister<TaskRepository>();
+      getIt.registerSingleton<TaskRepository>(mockTaskRepository);
+    },
+    build: () {
+      when(mockTaskRepository.getIncompleteTasks())
+          .thenAnswer((_) async => mockedTasks);
+      when(mockTaskRepository.newTask(newTask))
+          .thenThrow(DatabaseException());
+      return TodoListBloc();
+    },
+    act: (bloc) {
+      bloc.add(InitialEvent());
+      bloc.add(AddTaskTodoListEvent('task 3'));
+    },
+    expect: () => [
+      initialState,
+      firstLoadedState,
+      firstLoadedState.copyWith(isSubmitting: true),
+      firstLoadedState.copyWith(
+          isSubmitting: false, error: DatabaseException()),
+    ],
+  );
+
+  int taskIndex = 1; //index will be set complete
+  makeBlocTest<TodoListBloc, TodoListState>(
+    'set task 1 is complete successfully',
+    setUp: () {
+      getIt.unregister<TaskRepository>();
+      getIt.registerSingleton<TaskRepository>(mockTaskRepository);
+    },
+    build: () {
+      when(mockTaskRepository.getIncompleteTasks())
+          .thenAnswer((_) async => mockedTasks);
+
+      when(mockTaskRepository.updateTask(newTask)).thenAnswer((realInvocation) async{
+        mockedTasks[taskIndex] =  mockedTasks[taskIndex].copyWith(isComplete: true);
+      });
+      return TodoListBloc();
+    },
+    act: (bloc) {
+      bloc.add(InitialEvent());
+      bloc.add(SetCompleteTaskListEvent(true, taskIndex));
+    },
+    expect: () => [
+      initialState,
+      firstLoadedState,
+      firstLoadedState.copyWith(isLoading: false, tasks: [
         const TaskModel(content: 'task 2'),
-      ],
-      growable: true,
-    );
-    const newTask = TaskModel(content: 'task 3');
-    const initialState = TodoListState(tasks: [], isLoading: true);
-    final firstLoadedState = TodoListState(
-      isLoading: false,
-      tasks: mockedTasks.reversed.toList(),
-    );
-    final completeState = TodoListState(
-      isLoading: false,
-      tasks: [
-        newTask,
-        ...mockedTasks.reversed.toList(),
-      ],
-      isSubmitting: false,
-    );
-
-    makeBlocTest<TodoListBloc, TodoListState>(
-      'add a new task successfully',
-      setUp: () {
-        getIt.unregister<TaskRepository>();
-        getIt.registerSingleton<TaskRepository>(mockTaskRepository);
-      },
-      build: () {
-        when(mockTaskRepository.getIncompleteTasks())
-            .thenAnswer((_) async => mockedTasks);
-        when(mockTaskRepository.newTask(newTask)).thenAnswer((_) async {
-          mockedTasks.add(newTask);
-        });
-        return TodoListBloc();
-      },
-      act: (bloc) {
-        bloc.add(InitialEvent());
-
-        bloc.add(AddTaskTodoListEvent('task 3'));
-      },
-      expect: () => [
-        initialState,
-        firstLoadedState,
-        firstLoadedState.copyWith(isSubmitting: true),
-        completeState.copyWith(isSubmitting: false),
-        completeState.copyWith(isLoading: true),
-        completeState.copyWith(isLoading: false),
-      ],
-    );
-
-    makeBlocTest<TodoListBloc, TodoListState>(
-      'add a new task failed',
-      setUp: () {
-        getIt.unregister<TaskRepository>();
-        getIt.registerSingleton<TaskRepository>(mockTaskRepository);
-      },
-      build: () {
-        when(mockTaskRepository.getIncompleteTasks())
-            .thenAnswer((_) async => mockedTasks);
-        when(mockTaskRepository.newTask(newTask))
-            .thenThrow(DatabaseException());
-        return TodoListBloc();
-      },
-      act: (bloc) {
-        bloc.add(InitialEvent());
-        bloc.add(AddTaskTodoListEvent('task 3'));
-      },
-      expect: () => [
-        initialState,
-        firstLoadedState,
-        firstLoadedState.copyWith(isSubmitting: true),
-        firstLoadedState.copyWith(
-            isSubmitting: false, error: DatabaseException()),
-      ],
-    );
-
-    int taskIndex = 1; //index will be set complete
-    makeBlocTest<TodoListBloc, TodoListState>(
-      'set task 1 is complete successfully',
-      setUp: () {
-        getIt.unregister<TaskRepository>();
-        getIt.registerSingleton<TaskRepository>(mockTaskRepository);
-      },
-      build: () {
-        when(mockTaskRepository.getIncompleteTasks())
-            .thenAnswer((_) async => mockedTasks);
-
-        when(mockTaskRepository.updateTask(newTask)).thenAnswer((realInvocation) async{
-          mockedTasks[taskIndex] =  mockedTasks[taskIndex].copyWith(isComplete: true);
-        });
-        return TodoListBloc();
-      },
-      act: (bloc) {
-        bloc.add(InitialEvent());
-        bloc.add(SetCompleteTaskListEvent(true, taskIndex));
-      },
-      expect: () => [
-        initialState,
-        firstLoadedState,
-        firstLoadedState.copyWith(isLoading: false, tasks: [
-          const TaskModel(content: 'task 2'),
-          const TaskModel(content: 'task 1', isComplete: true),
-        ]),
-      ],
-    );
-
-  });
+        const TaskModel(content: 'task 1', isComplete: true),
+      ]),
+    ],
+  );
 }
