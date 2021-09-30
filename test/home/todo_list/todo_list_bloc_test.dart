@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -145,7 +144,9 @@ void main() {
         when(mockTaskRepository.getIncompleteTasks())
             .thenAnswer((_) async => mockedTasks);
 
-        when(mockTaskRepository.updateTask(newTask)).thenThrow(Data);
+        when(mockTaskRepository.updateTask(newTask)).thenAnswer((realInvocation) async{
+          mockedTasks[taskIndex] =  mockedTasks[taskIndex].copyWith(isComplete: true);
+        });
         return TodoListBloc();
       },
       act: (bloc) {
@@ -162,28 +163,5 @@ void main() {
       ],
     );
 
-    makeBlocTest<TodoListBloc, TodoListState>(
-      'set task 1 is complete failed',
-      setUp: () {
-        getIt.unregister<TaskRepository>();
-        getIt.registerSingleton<TaskRepository>(mockTaskRepository);
-      },
-      build: () {
-        when(mockTaskRepository.getIncompleteTasks())
-            .thenAnswer((_) async => mockedTasks);
-        when(mockTaskRepository.newTask(newTask))
-            .thenThrow(DatabaseException());
-        return TodoListBloc();
-      },
-      act: (bloc) {
-        bloc.add(InitialEvent());
-        bloc.add(SetCompleteTaskListEvent(true, taskIndex));
-      },
-      expect: () => [
-        initialState,
-        firstLoadedState,
-        firstLoadedState.copyWith(isLoading: false, error: DatabaseException()),
-      ],
-    );
   });
 }
