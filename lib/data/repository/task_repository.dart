@@ -17,25 +17,23 @@ abstract class TaskRepository {
 }
 
 class TaskDatabase extends BaseLocalData implements TaskRepository {
+  TaskDatabase(Isar isar) : super(isar);
+
   @override
   Future<List<TaskModel>> getAllTasks() async {
-    return isar.taskModelDbs
-        .where(sort: Sort.Desc)
-        .sortById()
-        .findAll()
-        .then((tasks) => tasks
-            .map((e) => TaskModel(
-                  id: e.id!,
-                  content: e.content,
-                  isComplete: e.isComplete,
-                ))
-            .toList());
+    return isar.taskModelDbs.where().findAll().then((tasks) => tasks
+        .map((e) => TaskModel(
+              id: e.id!,
+              content: e.content,
+              isComplete: e.isComplete,
+            ))
+        .toList());
   }
 
   @override
   Future<List<TaskModel>> getIncompleteTasks() async {
     return isar.taskModelDbs
-        .where(sort: Sort.Desc)
+        .where()
         .filter()
         .isCompleteEqualTo(false)
         .findAll()
@@ -51,7 +49,7 @@ class TaskDatabase extends BaseLocalData implements TaskRepository {
   @override
   Future<List<TaskModel>> getCompleteTasks() async {
     return isar.taskModelDbs
-        .where(sort: Sort.Desc)
+        .where()
         .filter()
         .isCompleteEqualTo(true)
         .findAll()
